@@ -4,6 +4,7 @@ import {Server} from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 
@@ -21,8 +22,11 @@ const startServer = async() =>{
     console.log(error);
    }
 }
+(async ()=>{
+await startServer()
+await seedSuperAdmin()
+})()
 
-startServer();
 
 /***
  * unhandled rejection error
@@ -41,6 +45,7 @@ process.on("unhandledRejection", (err)=> {
 })
 //unhandled rejection error
 // Promise.reject(new Error("I forget to catch this promise"))
+
 
 process.on("uncaughtException", (err)=> {
   console.log("Uncaught Exception detected...  Server shutting down..", err);

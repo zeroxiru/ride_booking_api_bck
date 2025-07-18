@@ -58,7 +58,7 @@ import { IsActive, Role } from "./user.interface";
       .max(200,{message: "Address cannot exceed 200 character"})
       .optional(),
     role: z
-      .enum(Object.values(Role) as[string])
+      .enum(Object.values(Role) as [string])
       .optional(),
     inActive: z
       .enum(Object.values(IsActive) as [string])
