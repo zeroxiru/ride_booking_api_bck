@@ -1,11 +1,10 @@
-import express, { NextFunction, request, Request, Response } from "express"
+import express, { NextFunction, Request, Response } from "express"
 // import { UserRoutes } from "./app/modules/user/user.route"
 import cors from 'cors'
 import { router } from "./app/routes"
-import { success } from "zod"
+
 import { envVars } from "./app/config/env"
 import { globalErrorHandeler } from "./app/middleWares/globalErrorHandler"
-import httpStatus  from "http-status-codes"
 import notFound from "./app/middleWares/notFound"
 import cookieParser from "cookie-parser"
 import passport from "passport"
@@ -31,7 +30,7 @@ app.use("/api/v1", router)
 
 app.get("/", (req:Request, res:Response)=>{ 
     res.status(200).json({ 
-        message: "Welcome to PH Tour Management System Backend"
+        message: "Welcome to Bike Riding API System Backend"
     })
 })
 

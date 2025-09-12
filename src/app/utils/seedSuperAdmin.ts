@@ -24,6 +24,7 @@ try {
         role: Role.SUPER_ADMIN,
         email:envVars.SUPER_ADMIN_EMAIL,
         password: hashPassword,
+        phone: "+8801000000000",
         isVerified: true,
         auths: [authProvider]
     }
@@ -32,6 +33,7 @@ try {
     console.log("Super Admin Created Successfully");
 
 } catch (error) {
-    
+      console.error("❌ Failed to create Super Admin:", error);
+    process.exit(1); // Exit if seeding fails
 }
 }

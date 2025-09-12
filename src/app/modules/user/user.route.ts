@@ -15,13 +15,11 @@ import { AuthControllers } from "../auth/auth.controller";
 
 const router = Router();
 
-router.post(
-  "/register",
+router.post("/register",
   validateRequest(createUserZodSchema),
   UserControllers.createUser
 );
-router.get(
-  "/all-users",
+router.get("/all-users",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   UserControllers.getAllUsers
 );

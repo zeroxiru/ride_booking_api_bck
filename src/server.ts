@@ -16,7 +16,7 @@ const startServer = async() =>{
      await mongoose.connect(envVars.DB_URL)
      console.log("Connected to DB");
      server = app.listen(envVars.PORT, () => { 
-    console.log(`PH Tour Management System is running on ${envVars.PORT}`);
+    console.log(`Ride Booking Management API System is running on ${envVars.PORT}`);
    })
    } catch (error) {
     console.log(error);

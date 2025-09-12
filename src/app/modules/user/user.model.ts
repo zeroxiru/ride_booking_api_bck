@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IAuthProvider, IsActive, IUser, Role } from "./user.interface";
+import { IAuthProvider, IUser, Role, UserStatus } from "./user.interface";
 
 const AuthProviderSchema =  new Schema<IAuthProvider>({
     provider: {type: String, required: true},
@@ -11,29 +11,47 @@ const AuthProviderSchema =  new Schema<IAuthProvider>({
 
 const userSchema = new Schema<IUser>({
     name : {type: String, required: true},
-    age: Number,
     email : { type: String, required: true, unique: true},
     password : {type: String},
+    phone: {type: String, required: true},
+    picture: {type: String},
+    status: { 
+        type: String,
+        enum: Object.values(UserStatus),
+        default: UserStatus.ACTIVE,
+    },
     role : {
         type : String,
         enum : Object.values(Role),
-        default : Role.USER
+        required : true,
+        default : Role.RIDER
     },
-    phone: {type: String},
-    picture: {type: String},
-    address: {type: String},
     isDeleted: {type: Boolean, default: false},
-    isActive: { 
-        type: String,
-        enum: Object.values(IsActive),
-        default: IsActive.ACTIVE,
-    },
     isVerified: {type: Boolean, default: false},
-    auths: [AuthProviderSchema]
+    auths: [AuthProviderSchema],
+    blockedReason: String
+  
 }, { 
 
     timestamps: true,
     versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+    
 })
+// Virtual populate for driver and rider profiles
+userSchema.virtual('riderProfile', {
+    ref: 'RiderProfile',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: true
+});
+
+userSchema.virtual('driverProfile', {
+    ref: 'DriverProfile',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: true
+});
 
 export const User =  model<IUser>("User", userSchema)

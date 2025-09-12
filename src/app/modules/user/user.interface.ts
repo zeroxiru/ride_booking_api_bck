@@ -1,10 +1,13 @@
 import { Types } from "mongoose";
+import { IRiderProfile } from "../rider/rider.interface";
+import { IDriverProfile } from "../driver/driver.interface";
 
 export enum Role { 
     SUPER_ADMIN = "SUPER_ADMIN",
     ADMIN = "ADMIN",
-    USER = "USER",
-    GUIDE = "GUIDE"
+    RIDER = "RIDER",
+    DRIVER = "DRIVER",
+    SYSTEM = "SYSTEM"
 }
 
 // auth providers
@@ -17,26 +20,30 @@ export interface IAuthProvider {
     provider: "google" | "credentials";
     providerId: string;
 }
-export enum IsActive { 
+export enum UserStatus  { 
     ACTIVE = "ACTIVE",
     INACTIVE= "INACTIVE",
-    BLOCKED = "BLOCKED"
+    BLOCKED = "BLOCKED",
+    PENDING_APPROVAL = "PENDING_APPROVAL"
 }
 
 export interface IUser { 
     _id ?: Types.ObjectId; 
     name : string;
-    age : number;
     email : string;
     password ?: string;
     phone ?: string;
     picture ?: string;
-    address ?: string;
-    isDeleted ?: string;
-    isActive ?: IsActive;
+    status ?: UserStatus;
     isVerified ?: boolean;
-    auths : IAuthProvider[];
+    auths ?: IAuthProvider[];
     role : Role;
-    bookings ?: Types.ObjectId[]
-    guides ?: Types.ObjectId[]
+    isDeleted ?: string;
+    blockedReason: string;
+        // Rider specific fields (optional)
+    riderProfile?: Types.ObjectId | IRiderProfile;
+    driverProfile?: Types.ObjectId | IDriverProfile
+    
+    // Driver specific fields (optional)
+    // driverProfile?: Types.ObjectId | IDriverProfile;
 }
