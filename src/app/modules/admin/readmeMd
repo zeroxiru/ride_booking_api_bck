@@ -1,0 +1,247 @@
+Ride Booking API: Project Overview
+This project delivers a complete backend system for a ride-sharing platform using Express.js and MongoDB. The API supports three user roles with distinct functionalities: riders can book and track rides, drivers manage ride acceptance and status updates, and admins oversee system operations and user management.
+
+The architecture follows a modular design with separate modules for authentication, user management, ride operations, and analytics. Key features include JWT-based security, role-based access control, ride lifecycle management, and comprehensive validation. The system handles essential ride-sharing workflows from booking to completion while maintaining scalability for future enhancements like ratings and fare calculations.
+
+Built with production-ready practices, the API provides RESTful endpoints with proper error handling and security measures, forming a robust foundation for a modern transportation platform.
+Ride Booking App Project Structure
+
+
+Auth Routes (/api/v1/auth):
+POST http://127.0.0.1:9000/api/v1/auth/login
+
+GET http://127.0.0.1:9000/api/v1/auth/google
+
+POST    /auth/login
+POST    /auth/refresh-token
+POST    /auth/logout
+POST    /auth/reset-password
+GET     /auth/google
+GET     /auth/google/callback
+
+Sample Body for /auth/login:
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+Sample Body for /auth/reset-password:
+{
+  "oldPassword": "oldpass123",
+  "newPassword": "newpass123"
+}
+
+User Routes (/api/v1/users):
+POST http://127.0.0.1:9000/api/v1/users/register
+
+GET http://127.0.0.1:9000/api/v1/users/all-users
+
+POST    /users/register
+GET     /users/all-users
+PATCH   /users/:id
+
+Sample Body for /users/register:
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "phone": "+1234567890",
+  "role": "rider"
+}
+
+Sample Body for PATCH /users/:id:
+{
+  "name": "John Smith",
+  "phone": "+1987654321"
+}
+
+Rider Routes (/api/v1/rider)
+POST    /rider/request
+GET     /rider/rides/history
+
+Sample Body for POST /rider/request:
+{
+  "pickupLocation": {
+    "address": "123 Main St",
+    "coordinates": { "lat": 40.7128, "lng": -74.0060 }
+  },
+  "destination": {
+    "address": "456 Park Ave",
+    "coordinates": { "lat": 40.7589, "lng": -73.9851 }
+  },
+  "rideType": "standard"
+}
+Ride Routes (/api/v1/rides):
+POST http://127.0.0.1:9000/api/v1/rider/request
+
+PATCH http://127.0.0.1:9000/api/v1/rides/:rideId/cancel
+
+POST http://127.0.0.1:9000/api/v1/rides/:rideId/feedback
+
+PATCH   /rides/:rideId/cancel
+GET     /rides/:rideId/rejections
+POST    /rides/:rideId/feedback
+
+Sample Body for PATCH /rides/:rideId/cancel:
+{
+  "reason": "Driver is taking too long"
+}
+
+Sample Body for POST /rides/:rideId/feedback:
+{
+  "userId": "user123",
+  "target": "driver",
+  "rating": 5,
+  "review": "Excellent service!"
+}
+
+Fare Routes (/api/v1/fares):
+
+POST http://127.0.0.1:9000/api/v1/fares/estimate
+
+GET http://127.0.0.1:9000/api/v1/fares/configurations
+
+POST    /fares/configurations/initialize
+POST    /fares/estimate
+GET     /fares/configurations
+PATCH   /fares/configurations
+
+Sample Body for POST /fares/estimate:
+{
+  "pickupLocation": { "lat": 40.7128, "lng": -74.0060 },
+  "destination": { "lat": 40.7589, "lng": -73.9851 },
+  "rideType": "standard"
+}
+
+Sample Body for PATCH /fares/configurations:
+{
+  "baseFare": 2.50,
+  "costPerMile": 1.75,
+  "costPerMinute": 0.25
+}
+
+Driver Routes (/api/v1/driver):
+GET http://127.0.0.1:9000/api/v1/driver/profile
+
+PATCH http://127.0.0.1:9000/api/v1/driver/availability
+
+PATCH http://127.0.0.1:9000/api/v1/driver/rides/:rideId/accept
+
+PATCH   /driver/rides/:rideId/accept
+PATCH   /driver/rides/:rideId/reject
+PATCH   /driver/availability
+PATCH   /driver/rides/:rideId/status
+GET     /driver/earnings
+PATCH   /driver/profile
+GET     /driver/profile
+GET     /driver/rejections/history
+
+Sample Body for PATCH /driver/availability:
+
+{
+  "isAvailable": true,
+  "currentLocation": {
+    "lat": 40.7128,
+    "lng": -74.0060
+  }
+}
+
+Sample Body for PATCH /driver/rides/:rideId/status:
+
+{
+  "status": "in_progress"
+}
+
+Sample Body for PATCH /driver/profile:
+{
+  "vehicle": {
+    "make": "Toyota",
+    "model": "Camry",
+    "year": 2022,
+    "color": "Blue"
+  }
+}
+
+Analytics Routes (/api/v1/analytics):
+GET http://127.0.0.1:9000/api/v1/analytics/dashboard
+GET     /analytics/dashboard
+GET     /analytics/rides/stats
+Sample Query Params for GET /analytics/dashboard:
+?startDate=2024-01-01&endDate=2024-01-31&timeRange=monthly
+
+Admin Routes (/api/v1/admin):
+GET http://127.0.0.1:9000/api/v1/admin/users
+
+GET http://127.0.0.1:9000/api/v1/admin/drivers
+
+GET http://127.0.0.1:9000/api/v1/admin/rides
+
+GET     /admin/users
+PATCH   /admin/users/:userId/block
+PATCH   /admin/users/:userId/unblock
+GET     /admin/drivers
+PATCH   /admin/drivers/:driverId/approve
+PATCH   /admin/drivers/:driverId/suspend
+GET     /admin/rides
+GET     /admin/rides/:rideId
+GET     /admin/reports/summary
+GET     /admin/reports/rides
+
+Sample Body for PATCH /admin/users/:userId/block:
+
+{
+  "reason": "Violation of terms of service"
+}
+
+
+Sample Body for PATCH /admin/drivers/:driverId/approve:
+
+{
+  "notes": "Documents verified successfully"
+}
+
+Key Architecture Principles:
+1. Modular Design
+Feature-based organization - Each business capability in its own module
+
+Separation of concerns - Clear boundaries between layers
+
+Independent development - Teams can work on different modules
+
+2. Scalable Structure
+Horizontal scaling - Modules can be deployed independently
+
+Database per service - Potential for microservices migration
+
+API gateway ready - Clean endpoint organization
+
+3. Maintainability
+Consistent patterns - Same structure across all modules
+
+Centralized config - Easy environment management
+
+Comprehensive testing - Built-in test organization
+
+4. Production Ready
+Error handling - Global error management
+
+Logging - Structured logging throughout
+
+Security - Auth middleware and validation layers
+
+Performance - Caching and optimization ready
+
+Module Responsibilities:
+Auth: User authentication, session management, OAuth flows
+
+User: User profiles, registration, account management
+
+Rider: Ride requests, booking, ride history
+
+Driver: Driver profiles, ride acceptance, availability
+
+Ride: Core ride logic, status updates, real-time tracking
+
+Fare: Pricing calculations, surge pricing, fare estimates
+
+Analytics: Business intelligence, reports, dashboard data
+
