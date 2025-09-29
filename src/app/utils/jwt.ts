@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // import jwt, { JwtPayload, SignOptions } from "jsonwebtoken"
 // export const generateToken = (payload: JwtPayload, secret: string, expiresIn: string)=>{
 // const token = jwt.sign(payload, secret, { 
@@ -14,7 +15,7 @@
 // }
 
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
-import { envVars } from "../config/env";
+
 import AppError from "../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
 
@@ -42,6 +43,35 @@ export const generateToken = (
   return jwt.sign(payload, secret, { expiresIn } as SignOptions);
 };
 
+// export const verifyToken = (token: string, secret: string): StandardJwtPayload => {
+//   try {
+//     const verifiedToken = jwt.verify(token, secret);
+
+//     if (typeof verifiedToken !== "object" || verifiedToken === null) {
+//       throw new AppError(httpStatus.UNAUTHORIZED, "Invalid token structure");
+//     }
+
+//     // Convert to StandardJwtPayload
+//     const payload = verifiedToken as StandardJwtPayload;
+    
+//     // For newly issued tokens
+//     if (payload._id) {
+//       return payload;
+//     }
+    
+//     // For legacy tokens (temporary backward compatibility)
+//     if (payload.email) {
+//       console.warn("Using email-based token - please migrate to _id-based tokens");
+//       return payload;
+//     }
+
+//     throw new AppError(httpStatus.UNAUTHORIZED, "Token missing required claims");
+//   } catch (error) {
+//     // Existing error handling...
+//   }
+// };
+
+
 export const verifyToken = (token: string, secret: string): StandardJwtPayload => {
   try {
     const verifiedToken = jwt.verify(token, secret);
@@ -66,6 +96,21 @@ export const verifyToken = (token: string, secret: string): StandardJwtPayload =
 
     throw new AppError(httpStatus.UNAUTHORIZED, "Token missing required claims");
   } catch (error) {
-    // Existing error handling...
+    // Re-throw the error to be handled by the caller
+    if (error instanceof AppError) {
+      throw error;
+    }
+    
+    // Handle JWT specific errors
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new AppError(httpStatus.UNAUTHORIZED, "Token expired");
+    }
+    
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new AppError(httpStatus.UNAUTHORIZED, "Invalid token");
+    }
+    
+    // Throw generic authentication error for other cases
+    throw new AppError(httpStatus.UNAUTHORIZED, "Authentication failed");
   }
 };

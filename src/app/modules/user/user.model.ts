@@ -13,7 +13,7 @@ const userSchema = new Schema<IUser>({
     name : {type: String, required: true},
     email : { type: String, required: true, unique: true},
     password : {type: String},
-    phone: {type: String, required: true},
+    phone: {type: String, required: false},
     picture: {type: String},
     status: { 
         type: String,
@@ -39,19 +39,28 @@ const userSchema = new Schema<IUser>({
     toObject: { virtuals: true }
     
 })
-// Virtual populate for driver and rider profiles
-userSchema.virtual('riderProfile', {
-    ref: 'RiderProfile',
-    localField: '_id',
-    foreignField: 'user',
-    justOne: true
-});
 
-userSchema.virtual('driverProfile', {
-    ref: 'DriverProfile',
-    localField: '_id',
-    foreignField: 'user',
-    justOne: true
-});
+// Pre-save middleware to auto-verify riders
+userSchema.pre('save', function(next) { 
+// auto-verify if user is a rider
+if(this.role === Role.RIDER && !this.isVerified){ 
+    this.isVerified = true;
+}
+next()
+})
+// // Virtual populate for driver and rider profiles
+// userSchema.virtual('riderProfile', {
+//     ref: 'RiderProfile',
+//     localField: '_id',
+//     foreignField: 'user',
+//     justOne: true
+// });
+
+// userSchema.virtual('driverProfile', {
+//     ref: 'DriverProfile',
+//     localField: '_id',
+//     foreignField: 'user',
+//     justOne: true
+// });
 
 export const User =  model<IUser>("User", userSchema)

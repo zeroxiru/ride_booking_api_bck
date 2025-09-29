@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes"
 import { UserServices } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
-import { success } from "zod";
 import { sendResponse } from "../../utils/senResponse";
 import { verifyToken } from "../../utils/jwt";
 import { envVars } from "../../config/env";

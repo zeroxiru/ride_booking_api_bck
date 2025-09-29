@@ -1,4 +1,4 @@
-import { AnyZodObject, z } from 'zod';
+import {  z } from 'zod';
 
 // Location validation schema
 export const locationSchema = z.object({

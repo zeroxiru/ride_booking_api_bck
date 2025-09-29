@@ -42,6 +42,15 @@ const DriverProfileSchema = new Schema({
     required: [true, 'User reference is required'],
     unique: true
   },
+    approvalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected', 'suspended'],
+    default: 'pending'
+  },
+  isProfileComplete: {
+    type: Boolean,
+    default: false
+  },
   slug: {
     type: String,
     required: [true, 'Slug is required'],
@@ -172,6 +181,7 @@ DriverProfileSchema.index({ 'currentLocation.coordinates': '2dsphere' });
 
 // Index for frequently queried fields
 DriverProfileSchema.index({ isOnline: 1, isAvailable: 1 });
+DriverProfileSchema.index({ approvalStatus: 1 });
 DriverProfileSchema.index({ approved: 1 });
 
 // Virtual for formatted insurance validity date

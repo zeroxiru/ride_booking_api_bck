@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express"
+import express, {  Request, Response } from "express"
 // import { UserRoutes } from "./app/modules/user/user.route"
 import cors from 'cors'
 import { router } from "./app/routes"
@@ -24,7 +24,11 @@ app.use(passport.session())
 
 app.use(cookieParser())
 app.use(express.json())
-app.use(cors())
+app.set("trust proxy", 1)
+app.use(cors({ 
+    origin: envVars.FRONTEND_URL,
+    credentials: true
+}))
 
 app.use("/api/v1", router)
 

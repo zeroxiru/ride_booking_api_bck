@@ -18,6 +18,6 @@ router.get("/google", async (req: Request, res: Response, next: NextFunction)=> 
     passport.authenticate("google", {scope: ["profile", "email"], state: redirect as string})(req, res, next)
     // api/v1/auth/google/callback?state=/booking
 })
-router.get("/google/callback", passport.authenticate("google", {failureRedirect: "/login"}), AuthControllers.googleCallbackController)
+router.get("/google/callback", passport.authenticate("google", {failureRedirect: "/login", session: false}), AuthControllers.googleCallbackController)
 
 export const AuthRoutes = router

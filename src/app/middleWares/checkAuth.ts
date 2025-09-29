@@ -87,7 +87,7 @@ const extractTokenFromHeader = (req: Request): string => {
     throw new AppError(httpStatus.UNAUTHORIZED, "Authorization header missing");
   }
 
-  const token = authHeader.startsWith("Bearer ")
+  const token = authHeader.startsWith("Bearer")
     ? authHeader.split(" ")[1]
     : authHeader;
 

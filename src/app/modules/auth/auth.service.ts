@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import AppError from "../../errorHelpers/AppError";
-import { IsActive, IUser } from "../user/user.interface";
+import {  IUser } from "../user/user.interface";
 import { User } from "../user/user.model";
 import httpStatus, { INSUFFICIENT_STORAGE } from "http-status-codes";
 import bcryptjs from "bcryptjs";
@@ -46,7 +47,15 @@ const getNewAccessToken = async (refreshToken: string) => {
 
 const resetPassword = async (oldPassword: string, newPassword: string, decodedToken: JwtPayload) => {
  
-  const user = await User.findById(decodedToken.userId)
+   // Add null checking for decodedToken
+  if (!decodedToken || !decodedToken._id) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+  }
+  const user = await User.findById(decodedToken._id)
+
+  if(!user){ 
+    throw new AppError(httpStatus.NOT_FOUND, "User not Found")
+  }
   const isOldPasswordMatch =  await bcryptjs.compare(oldPassword, user!.password as string)
   
   if(!isOldPasswordMatch) { 
@@ -58,6 +67,20 @@ const resetPassword = async (oldPassword: string, newPassword: string, decodedTo
 };
 
 
+// const resetPassword = async (oldPassword: string, newPassword: string, decodedToken: any) => {
+//   // More flexible check
+//   if (!decodedToken || decodedToken._id) {
+//     throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+//   }
+  
+//   const userId = decodedToken.userId || decodedToken.id || decodedToken.sub;
+//   if (!userId) {
+//     throw new AppError(httpStatus.UNAUTHORIZED, 'User ID not found in token');
+//   }
+  
+//   const user = await User.findById(userId);
+//   // ... rest of your code
+// };
 
 
 export const AuthServices = {

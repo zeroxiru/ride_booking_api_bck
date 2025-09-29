@@ -39,7 +39,7 @@ export interface IUser {
     auths ?: IAuthProvider[];
     role : Role;
     isDeleted ?: string;
-    blockedReason: string;
+    blockedReason?: string;
         // Rider specific fields (optional)
     riderProfile?: Types.ObjectId | IRiderProfile;
     driverProfile?: Types.ObjectId | IDriverProfile
