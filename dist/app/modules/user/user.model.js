@@ -30,7 +30,18 @@ const userSchema = new mongoose_1.Schema({
     isDeleted: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     auths: [AuthProviderSchema],
-    blockedReason: String
+    blockedReason: String,
+    // Add driverProfile and riderProfile fields
+    driverProfile: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'DriverProfile',
+        required: false
+    },
+    riderProfile: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'RiderProfile',
+        required: false
+    }
 }, {
     timestamps: true,
     versionKey: false,
