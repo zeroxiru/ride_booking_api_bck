@@ -78,7 +78,8 @@ export const DriverServices = {
       // Create a basic driver profile
     driverProfile = await DriverProfile.create({
       user: params.driverId,
-      slug: `driver-${params.driverId.toString()}`,
+      slug: `${user.name}-${params.driverId.toString()}`,
+     
       vehicle: {
         make: "Unknown",
         model: "Unknown",
@@ -98,7 +99,9 @@ export const DriverServices = {
       isAvailable: params.isOnline,
       totalRidesCompleted: 0,
       approved: false
+       
     });
+    
   }
     
     const update: any = {

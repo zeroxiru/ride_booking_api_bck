@@ -29,7 +29,19 @@ const userSchema = new Schema<IUser>({
     isDeleted: {type: Boolean, default: false},
     isVerified: {type: Boolean, default: false},
     auths: [AuthProviderSchema],
-    blockedReason: String
+    blockedReason: String,
+
+    // Add driverProfile and riderProfile fields
+    driverProfile: {
+        type: Schema.Types.ObjectId,
+        ref: 'DriverProfile',
+        required: false
+    },
+    riderProfile: {
+        type: Schema.Types.ObjectId,
+        ref: 'RiderProfile', 
+        required: false
+    }
   
 }, { 
 

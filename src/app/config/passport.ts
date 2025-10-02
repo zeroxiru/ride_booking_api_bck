@@ -10,6 +10,7 @@ import { envVars } from "./env";
 import { User } from "../modules/user/user.model";
 import { Role, UserStatus } from "../modules/user/user.interface";
 import bcryptjs from "bcryptjs";
+import { IDriverProfile } from "../modules/driver/driver.interface";
 
 // passport.use(
 //   new LocalStrategy(
@@ -91,9 +92,17 @@ passport.use(
     },
     async (email: string, password: string, done) => {
       try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email })
+        .populate('driverProfile')
+        .populate('riderProfile');
           
-
+         console.log('🔍 User found:', user ? {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          driverProfile: user.driverProfile,
+          riderProfile: user.riderProfile
+        } : 'No user found');
         if (!user) {
           return done(null, false, { message: "User does not exist" });
         }
@@ -119,16 +128,23 @@ passport.use(
 
         // Driver-specific checks
         if (user.role === Role.DRIVER) {
+        
           if (!user.driverProfile) {
-            return done(null, false, { message: "Driver profile not found" });
-          }
-          
-          const driverProfile = user.driverProfile as any;
+                console.log('❌ Driver profile not found for user:', user.email);
+            // return done(null, false, { message: "Driver profile not found" });
+          } else {
+const driverProfile = user.driverProfile as IDriverProfile;
+              console.log('🔍 Driver profile approvalStatus:', driverProfile.approvalStatus);
           if (driverProfile.approvalStatus !== 'approved') {
             return done(null, false, { 
-              message: `Driver account is ${driverProfile.approvalStatus}` 
+              message: `Driver account is ${driverProfile.approvalStatus}. Please wait for admin approval` 
             });
           }
+     console.log('✅ Driver profile is approved');
+          }
+
+          
+  
         }
 
         // Password validation for all users

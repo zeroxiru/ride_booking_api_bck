@@ -12,6 +12,7 @@ export interface IVehicle {
 export interface IDriverProfile {
   _id?: Types.ObjectId;
   user: Types.ObjectId | IUser;
+  approvalStatus: 'pending' | 'approved' | 'rejected' | 'suspended';
   slug: string;
   vehicle: IVehicle;
   licenseNumber: string;
