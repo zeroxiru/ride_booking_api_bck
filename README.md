@@ -7,23 +7,8 @@ Ride Booking API: Project Overview This project delivers a complete backend syst
 The architecture follows a modular design with separate modules for authentication, user management, ride operations, and analytics. Key features include JWT-based security, role-based access control, ride lifecycle management, and comprehensive validation. The system handles essential ride-sharing workflows from booking to completion while maintaining scalability for future enhancements like ratings and fare calculations.
 
 Built with production-ready practices, the API provides RESTful endpoints with proper error handling and security measures, forming a robust foundation for a modern transportation platform. Ride Booking App Project Structure
-📁 ride-booking-app/
-├── 📁 src/
-│ ├── 📁 modules/
-│ │ ├── 📁 auth/
-│ │ ├── 📁 user/
-│ │ ├── 📁 rider/
-│ │ ├── 📁 driver/
-│ │ ├── 📁 ride/
-│ │ ├── 📁 fare/
-│ │ └── 📁 analytics/
-│ ├── 📁 middlewares/
-│ ├── 📁 config/
-│ ├── 📁 utils/
-│ └── 📁 types/
-├── 📁 tests/
-├── 📁 docs/
-└── 📁 scripts/
+
+https://i.ibb.co.com/bRg1kcnd/ride-app-folder-structure.png
 
 🚀 Features
 
@@ -43,7 +28,7 @@ Built with production-ready practices, the API provides RESTful endpoints with p
 
 ⚙️ Installation
 # Clone repository
-git clone https://github.com/your-username/ride-booking-app.git
+git clone https://github.com/zeroxiru/ride_booking_api_bck.git
 
 # Navigate
 cd ride-booking-app
